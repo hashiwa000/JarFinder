@@ -1,7 +1,7 @@
 # JarFinder
 
-Requirement
-*JDK/JRE 8 (動作確認はOracle JDKを使用)
+Requirement  
+* JDK/JRE 8 (動作確認はOracle JDKを使用)
 
 Usage: jarファイル群から特定の文字列(java/rmi)を含むクラスを探す
   java -jar jarfinder.jar class "c:\Program Files (x86)\NetBeans 8.0.2\ide" Operation
