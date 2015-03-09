@@ -4,6 +4,7 @@ Requirement
 * JDK/JRE 8 (動作確認はOracle JDKを使用)
 
 Usage: jarファイル群から特定の文字列(java/rmi)を含むクラスを探す  
+    
     java -jar jarfinder.jar class "c:\Program Files (x86)\NetBeans 8.0.2\ide" Operation
     --- c:\Program Files (x86)\NetBeans 8.0.2\ide\modules\com-jcraft-jsch.jar ---
     --- c:\Program Files (x86)\NetBeans 8.0.2\ide\modules\com-jcraft-jzlib.jar ---
@@ -14,6 +15,7 @@ Usage: jarファイル群から特定の文字列(java/rmi)を含むクラスを探す
       --- snip ---
 
 Usage: jarファイル群から特定の文字列(java/rmi)を含むコンスタントプールエントリーを探す  
+    
     java -jar jarfinder.jar constpool "c:\Program Files (x86)\NetBeans 8.0.2\ide" java/rmi
     --- c:\Program Files (x86)\NetBeans 8.0.2\ide\modules\com-jcraft-jsch.jar ---
     ----- com/jcraft/jsch/Buffer.class -----
