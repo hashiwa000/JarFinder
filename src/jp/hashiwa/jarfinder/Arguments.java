@@ -37,49 +37,69 @@ class Arguments {
     case "constpool":
       parseConstantPoolArgs(args, out);
       break;
+    case "constpool-all":
+      parseAllConstantPoolArgs(args, out);
+      break;
     default:
       usage();
     }
   }
   private void parseClassArgs(String[] args, PrintWriter out) {
-    if (3 < args.length) usage();
+    if (4 < args.length) usage();
 
-    String className = null;
-    if (args.length == 3) {
-      className = args[2];
+    String className = args[2];
+    boolean verbose = false;
+    if (args.length == 4) {
+      if ("-v".equals(args[3])) verbose = true;
+      else usage();
     }
     
-    this.proc = new ClassNameFilterProcessor(className, out);
+    this.proc = new ClassNameFilterProcessor(className, out, verbose);
   }
   
   private void parseConstantPoolArgs(String[] args, PrintWriter out) {
-    if (3 < args.length) usage();
-
-    String className = null;
-    if (args.length == 3) {
-      className = args[2];
+    if (4 < args.length) usage();
+    
+    String className = args[2];
+    boolean verbose = false;
+    if (args.length == 4) {
+      if ("-v".equals(args[3])) verbose = true;
+      else usage();
     }
     
-    this.proc = new ConstantPoolFilterProcessor(className, out);
+    this.proc = new ConstantPoolFilterProcessor(className, out, verbose);
+  }
+  
+  private void parseAllConstantPoolArgs(String[] args, PrintWriter out) {
+    this.proc = new ConstantPoolFilterProcessor(null, out, true);
   }
   
   private static void usage() {
-    System.out.println("java -jar xxx.jar <command> <dir> [options]");
+    System.out.println("java -jar xxx.jar <command> [options]");
     System.out.println();
     System.out.println("<command>");
     System.out.println("  class : find class from jar files.");
     System.out.println("  constpool : find string in all constant pool.");
     System.out.println();
-    System.out.println("<dir> : start directory for finding jar files");
-    System.out.println();
-    System.out.println(" <comman>class : [options]<target-class>");
-    System.out.println("    target-class : name of class which you are");
-    System.out.println("    looking for. If not specified, all classes are");
-    System.out.println("    shown.");
-    System.out.println(" <comman>constpool : [options]<target-str>");
-    System.out.println("    target-str : string which you are looking for");
-    System.out.println("    If not specified, all constant pool utf8 strings");
-    System.out.println("    are shown.");
+    System.out.println("<command>      : [options]");
+    System.out.println("  class        : <dir> <target-class> [-v]");
+    System.out.println("    Search classes in jar files.");
+    System.out.println("    <dir> is start directory for finding jar files.");
+    System.out.println("    <target-class> is regex expression of class name");
+    System.out.println("    which you are looking for. If not specified, all");
+    System.out.println("    classes are shown.");
+    System.out.println("    [-v] is flag to enable verbose mode. Default is");
+    System.out.println("    disabled.");
+    System.out.println("  constpool    : <dir> <target-str> [-v]");
+    System.out.println("    Search constant pool entries (UTF8 info) in jar files.");
+    System.out.println("    <dir> is start directory for finding jar files.");
+    System.out.println("    <target-str> is regex expression of constant pool");
+    System.out.println("    entry (UTF8 info) which you are looking for.");
+    System.out.println("    [-v] is flag to enable verbose mode. Default is");
+    System.out.println("    disabled.");
+    System.out.println("  constpool-all : <dir>");
+    System.out.println("    Show all constant pool entry (UTF8 info).");
+    System.out.println("    <dir> is start directory for finding jar files.");
     System.out.println();
     
     System.exit(-1);

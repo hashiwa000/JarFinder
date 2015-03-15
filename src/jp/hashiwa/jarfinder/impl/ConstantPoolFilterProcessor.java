@@ -5,34 +5,31 @@ import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import jp.hashiwa.jarfinder.impl.ConstantPoolEntry.Utf8_info;
 
 public class ConstantPoolFilterProcessor extends JarFileProcessorImpl {
-  private static boolean DEBUG = true;
-  private final String containsStrPattern;
+  private final Pattern pattern;
   
-  public ConstantPoolFilterProcessor(String containsStrPattern, 
-      PrintWriter out) {
-    super(out);
-    this.containsStrPattern = containsStrPattern;
+  private String cachedClassName = null;
+  
+  public ConstantPoolFilterProcessor(String targetRegex, 
+      PrintWriter out, boolean verbose) {
+    super(out, verbose);
+    this.pattern = targetRegex==null ?
+        null : Pattern.compile(targetRegex);
   }
   
   @Override
   protected void processOneClassEntry(ZipFile f, ZipEntry e) {
-    println("----- " + e.getName() + " -----");
+    produceClassName(e.getName());
     
     byte[] bytes = new byte[4];
     try (DataInputStream in = new DataInputStream(
         new BufferedInputStream(f.getInputStream(e)))) {
-//      in.readFully(bytes, 0, 4);
-//      System.out.println(
-//          toHex(bytes[0]) + "," + 
-//          toHex(bytes[1]) + "," + 
-//          toHex(bytes[2]) + "," + 
-//          toHex(bytes[3]));
       readMagic(in, bytes);
       readVersion(in, bytes);
       readConstantPool(in, bytes);
@@ -74,19 +71,32 @@ public class ConstantPoolFilterProcessor extends JarFileProcessorImpl {
       
       if (e instanceof Utf8_info) {
         String str = ((Utf8_info) e).getActualString();
-        if (containsStrPattern==null || 
-            str.contains(containsStrPattern)) {
+        if (pattern==null || pattern.matcher(str).matches()) {
+          consumeJarFileStr();
+          consumeClassName();
           println(str);
         }
       }
     }
   }
   
-  private String toHex(int b) {
-    return "0x" + Integer.toHexString(0x000000ff & b);
+  private void produceClassName(String className) {
+    //assert className!=null;
+    if (isVerbose()) {
+      printClassName(cachedClassName);
+    } else {
+      cachedClassName = className;
+    }
   }
   
-  private int b2i(byte b) {
-    return 0x000000ff & b;
+  private void consumeClassName() {
+    if (cachedClassName!=null && !isVerbose()) {
+      printClassName(cachedClassName);
+      cachedClassName = null;
+    }
+  }
+  
+  private void printClassName(String className) {
+    println("----- " + className + " -----");
   }
 }
