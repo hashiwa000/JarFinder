@@ -75,7 +75,7 @@ class Arguments {
   }
   
   private static void usage() {
-    System.out.println("java -jar xxx.jar <command> [options]");
+    System.out.println("jarfinder.bat <command> [options]");
     System.out.println();
     System.out.println("<command>");
     System.out.println("  class : find class from jar files.");
