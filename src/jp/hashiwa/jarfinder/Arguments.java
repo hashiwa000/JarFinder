@@ -21,11 +21,8 @@ class Arguments {
     return proc;
   }
   
-  Arguments(String[] args) {
+  Arguments(String[] args, PrintWriter out) {
     if (args.length<2) usage();
-    
-    PrintWriter out = new PrintWriter(
-        new BufferedOutputStream(System.out));
     
     this.command = args[0];
     this.dir = args[1];
@@ -33,6 +30,9 @@ class Arguments {
     switch(this.command) {
     case "class":
       parseClassArgs(args, out);
+      break;
+    case "class-all":
+      parseAllClassArgs(args, out);
       break;
     case "constpool":
       parseConstantPoolArgs(args, out);
@@ -55,6 +55,10 @@ class Arguments {
     }
     
     this.proc = new ClassNameFilterProcessor(className, out, verbose);
+  }
+  
+  private void parseAllClassArgs(String[] args, PrintWriter out) {
+    this.proc = new ClassNameFilterProcessor(null, out, true);
   }
   
   private void parseConstantPoolArgs(String[] args, PrintWriter out) {
@@ -90,6 +94,9 @@ class Arguments {
     System.out.println("    classes are shown.");
     System.out.println("    [-v] is flag to enable verbose mode. Default is");
     System.out.println("    disabled.");
+    System.out.println("  class-all    : <dir>");
+    System.out.println("    Show all classes in jar files.");
+    System.out.println("    <dir> is start directory for finding jar files.");
     System.out.println("  constpool    : <dir> <target-str> [-v]");
     System.out.println("    Search constant pool entries (UTF8 info) in jar files.");
     System.out.println("    <dir> is start directory for finding jar files.");
