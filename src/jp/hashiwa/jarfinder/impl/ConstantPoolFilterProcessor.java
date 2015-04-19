@@ -38,7 +38,6 @@ public class ConstantPoolFilterProcessor extends JarFileProcessorImpl {
     } catch (IOException e1) {
       e1.printStackTrace();
     }
-
   }
   
   private void readMagic(DataInputStream in, byte[] bytes)
@@ -99,4 +98,8 @@ public class ConstantPoolFilterProcessor extends JarFileProcessorImpl {
   private void printClassName(String className) {
     println("----- " + className + " -----");
   }
+
+  public void doStart() {}
+  public void doEnd() {}
+
 }

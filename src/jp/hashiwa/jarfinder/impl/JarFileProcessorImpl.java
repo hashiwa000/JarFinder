@@ -46,7 +46,11 @@ public abstract class JarFileProcessorImpl implements JarFileProcessor {
       e.printStackTrace();
     }
   }
-  
+
+  protected PrintWriter getOut() {
+    return out;
+  }
+
   protected void println(String str) {
     out.println(str);
   }

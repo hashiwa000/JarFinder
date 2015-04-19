@@ -12,12 +12,17 @@ public class JarFinderMain {
     PrintWriter out = new PrintWriter(
         new BufferedOutputStream(System.out));
     Arguments arg = new Arguments(args, out);
-    
-//    doOneJar("c:\\Program Files (x86)\\NetBeans 8.0.2\\ide\\modules\\org-apache-commons-httpclient.jar");
+
+    JarFileProcessor proc = arg.getProcessor();
+
+    proc.doStart();
+
     Path startPath = new File(arg.getDir()).toPath();
-    JarWalker walker = new JarWalker(arg.getProcessor());
+    JarWalker walker = new JarWalker(proc);
     Files.walkFileTree(startPath, walker);
-    
+
+    proc.doEnd();
+
     out.flush();
   }
 }

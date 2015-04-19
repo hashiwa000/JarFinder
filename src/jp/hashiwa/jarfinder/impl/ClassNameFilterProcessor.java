@@ -25,4 +25,7 @@ public class ClassNameFilterProcessor extends JarFileProcessorImpl {
       println(e.getName());
     }
   }
+
+  public void doStart() {}
+  public void doEnd() {}
 }

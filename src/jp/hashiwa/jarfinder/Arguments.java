@@ -3,6 +3,7 @@ package jp.hashiwa.jarfinder;
 import java.io.BufferedOutputStream;
 import java.io.PrintWriter;
 
+import jp.hashiwa.jarfinder.impl.CallTreeProcessor;
 import jp.hashiwa.jarfinder.impl.ClassNameFilterProcessor;
 import jp.hashiwa.jarfinder.impl.ConstantPoolFilterProcessor;
 
@@ -40,6 +41,10 @@ class Arguments {
     case "constpool-all":
       parseAllConstantPoolArgs(args, out);
       break;
+    case "calltree":
+      parseCallTreeArgs(args, out);
+      break;
+
     default:
       usage();
     }
@@ -77,7 +82,11 @@ class Arguments {
   private void parseAllConstantPoolArgs(String[] args, PrintWriter out) {
     this.proc = new ConstantPoolFilterProcessor(null, out, true);
   }
-  
+
+  private void parseCallTreeArgs(String[] args, PrintWriter out) {
+    this.proc = new CallTreeProcessor(out, false);
+  }
+
   private static void usage() {
     System.out.println("jarfinder.bat <command> [options]");
     System.out.println();
