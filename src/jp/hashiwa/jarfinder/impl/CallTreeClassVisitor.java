@@ -15,7 +15,6 @@ class CallTreeClassVisitor extends ClassVisitor {
 
   CallTreeClassVisitor(CallTree callTree) {
     super(Opcodes.ASM5);
-    // this.callTree = callTree;
     this.callTree = callTree;
   }
 
@@ -40,8 +39,8 @@ class CallTreeClassVisitor extends ClassVisitor {
       @Override
       public void visitMethodInsn(int i, String owner, String name, String desc, boolean itf) {
         super.visitMethodInsn(i, owner, name, desc, itf);
-        System.out.println(callerClassName + " : " + callerMethodName + " : " + callerDesc);
-        System.out.println(owner + " : " + name + " : " + desc);
+        // System.out.println(callerClassName + " : " + callerMethodName + " : " + callerDesc);
+        // System.out.println(owner + " : " + name + " : " + desc);
         callTree.add(owner, name, desc, callerClassName, callerMethodName, callerDesc);
       }
     };

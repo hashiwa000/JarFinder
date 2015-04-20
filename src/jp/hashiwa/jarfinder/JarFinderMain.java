@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.stream.Stream;
 
 public class JarFinderMain {
   public static void main(String[] args) throws IOException {
@@ -17,9 +17,16 @@ public class JarFinderMain {
 
     proc.doStart();
 
-    Path startPath = new File(arg.getDir()).toPath();
     JarWalker walker = new JarWalker(proc);
-    Files.walkFileTree(startPath, walker);
+    Stream.of(arg.getDirs()).forEach(
+            s -> {
+              try {
+                Files.walkFileTree(new File(s).toPath(), walker);
+              } catch(Exception e) {
+                e.printStackTrace();
+              }
+            }
+    );
 
     proc.doEnd();
 

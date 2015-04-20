@@ -53,9 +53,9 @@ class CallTree {
     printOn(out, new CallTreeEntry(calleeClassName, calleeMethodName, calleeDesc));
   }
   public void printOn(PrintWriter out, CallTreeEntry callee) {
-    printOn(out, callee, 0);
+    printOn(out, callee, 0, new HashSet<CallTreeEntry>());
   }
-  public void printOn(PrintWriter out, CallTreeEntry callee, int indent) {
+  private void printOn(PrintWriter out, CallTreeEntry callee, int indent, Set<CallTreeEntry> alreadyPrinted) {
     CallTreeEntry root = null;
     for (CallTreeEntry e: entries) {
       if (e.equals(callee)) {
@@ -78,7 +78,10 @@ class CallTree {
 
     int nextIndent = indent + 1;
     for (CallTreeEntry e: root.getCallers()) {
-      printOn(out, e, nextIndent);
+      if (!alreadyPrinted.contains(e)) {
+        alreadyPrinted.add(e);
+        printOn(out, e, nextIndent, alreadyPrinted);
+      }
     }
   }
 
@@ -90,7 +93,7 @@ class CallTree {
     private String printStrCache = null;
 
     CallTreeEntry(@NotNull String calleeClassName, @NotNull String calleeMethodName, @NotNull String calleeDesc) {
-      this.calleeClassName = calleeClassName.replace('/', '.');
+      this.calleeClassName = calleeClassName;
       this.calleeMethodName = calleeMethodName;
       this.calleeDesc = calleeDesc;
       this.callers = new HashSet<>();
@@ -108,15 +111,10 @@ class CallTree {
       return calleeDesc;
     }
 
-    // public void clearCaller() {
-    //   callers.clear();
-    // }
     public boolean addCaller(CallTreeEntry caller) {
       return callers.add(caller);
     }
-    // public boolean addAllCaller(Set<CallTreeEntry> callers) {
-    //   return this.callers.addAll(callers);
-    // }
+
     private Set<CallTreeEntry> getCallers() {
       return callers;
     }
