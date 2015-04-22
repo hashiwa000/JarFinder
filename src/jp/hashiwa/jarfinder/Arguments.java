@@ -1,13 +1,16 @@
 package jp.hashiwa.jarfinder;
 
-import java.io.BufferedOutputStream;
-import java.io.PrintWriter;
-import java.util.stream.Stream;
-
 import jp.hashiwa.jarfinder.impl.CallTreeProcessor;
 import jp.hashiwa.jarfinder.impl.ClassNameFilterProcessor;
 import jp.hashiwa.jarfinder.impl.ConstantPoolFilterProcessor;
 
+import java.io.PrintWriter;
+import java.util.stream.Stream;
+
+/**
+ * アプリケーションの引数解析、初期設定を行うクラス。
+ * @author Hashiwa
+ */
 class Arguments {
   private String command;
   private String[] dirs;

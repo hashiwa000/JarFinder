@@ -18,7 +18,7 @@ public class JarWalker extends SimpleFileVisitor<Path> {
   
   @Override
   public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
-    if (isValidJarFile(new File(path.toString()))) {
+    if (isValidJarFile(path.toFile())) {
       processor.doOneJar(path.toString());
     }
     return FileVisitResult.CONTINUE;
