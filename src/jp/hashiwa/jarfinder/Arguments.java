@@ -3,6 +3,7 @@ package jp.hashiwa.jarfinder;
 import jp.hashiwa.jarfinder.impl.CallTreeProcessor;
 import jp.hashiwa.jarfinder.impl.ClassNameFilterProcessor;
 import jp.hashiwa.jarfinder.impl.ConstantPoolFilterProcessor;
+import jp.hashiwa.jarfinder.impl.ExtendsProcessor;
 
 import java.io.PrintWriter;
 import java.util.stream.Stream;
@@ -48,6 +49,9 @@ class Arguments {
     case "calltree":
       parseCallTreeArgs(args, out);
       break;
+      case "extends":
+        parseExtendsArgs(args, out);
+        break;
 
     default:
       usage();
@@ -93,6 +97,10 @@ class Arguments {
     String methodDesc = args[2];
 
     this.proc = new CallTreeProcessor(out, methodDesc, false);
+  }
+
+  private void parseExtendsArgs(String[] args, PrintWriter out) {
+    this.proc = new ExtendsProcessor(out, false);
   }
 
   private static String[] splitPaths(String path) {
