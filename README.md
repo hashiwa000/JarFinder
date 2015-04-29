@@ -1,10 +1,10 @@
 # JarFinder
 
 ## Requirement  
- * JDK/JRE 8 (“®ìŠm”F‚ÍOracle JDK‚ğg—p)
+ * JDK/JRE 8 (å‹•ä½œç¢ºèªã¯Oracle JDKã‚’ä½¿ç”¨)
 
 ## Usage
-+ jarƒtƒ@ƒCƒ‹ŒQ‚©‚ç“Á’è‚Ì•¶š—ñ(java/rmi)‚ğŠÜ‚ŞƒNƒ‰ƒX‚ğ’T‚·  
++ jarãƒ•ã‚¡ã‚¤ãƒ«ç¾¤ã‹ã‚‰ç‰¹å®šã®æ–‡å­—åˆ—(Operation)ã‚’å«ã‚€ã‚¯ãƒ©ã‚¹ã‚’æ¢ã™  
 
 <pre>
 >java -jar jarfinder.jar class "c:\Program Files (x86)\NetBeans 8.0.2\ide" Operation
@@ -17,7 +17,7 @@ org/antlr/runtime/TokenRewriteStream$RewriteOperation.class
   --- (snip) ---
 </pre>
 
-+ jarƒtƒ@ƒCƒ‹ŒQ‚©‚ç“Á’è‚Ì•¶š—ñ(java/rmi)‚ğŠÜ‚ŞƒRƒ“ƒXƒ^ƒ“ƒgƒv[ƒ‹ƒGƒ“ƒgƒŠ[‚ğ’T‚·  
++ jarãƒ•ã‚¡ã‚¤ãƒ«ç¾¤ã‹ã‚‰ç‰¹å®šã®æ–‡å­—åˆ—(java/rmi)ã‚’å«ã‚€ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒ—ãƒ¼ãƒ«ã‚¨ãƒ³ãƒˆãƒªãƒ¼ã‚’æ¢ã™  
 
 <pre>
 >java -jar jarfinder.jar constpool "c:\Program Files (x86)\NetBeans 8.0.2\ide" java/rmi
@@ -36,8 +36,8 @@ java/rmi/RemoteException
   --- (snip) ---
 </pre>
 
-+ Usage: jarƒtƒ@ƒCƒ‹ŒQ‚ğ‰ğÍ‚µ‚ÄŒp³ŠÖŒW‚ğ•\¦‚·‚é  
-  (’ˆÓFˆÈ‰º‚Ì—á‚ÍAŒ©‚â‚·‚¢‚æ‚¤‚ÉŠÖ˜A‚·‚éƒNƒ‰ƒX‚ğè“®‚Åœ‚¢‚Ä‚¢‚Ü‚·)
++ Usage: jarãƒ•ã‚¡ã‚¤ãƒ«ç¾¤ã‚’è§£æã—ã¦ç¶™æ‰¿é–¢ä¿‚ã‚’è¡¨ç¤ºã™ã‚‹  
+  (æ³¨æ„ï¼šä»¥ä¸‹ã®ä¾‹ã¯ã€è¦‹ã‚„ã™ã„ã‚ˆã†ã«é–¢é€£ã™ã‚‹ã‚¯ãƒ©ã‚¹ã‚’æ‰‹å‹•ã§é™¤ã„ã¦ã„ã¾ã™)
 
 <pre>
 >java -jar jarfinder.jar extends "c:\Program Files\Java\jdk1.8.0_45";jarfinder.jar
@@ -84,4 +84,4 @@ jp/hashiwa/jarfinder/JarFileProcessor
 	<-jp/hashiwa/jarfinder/impl/JarFileProcessorImpl
 </pre>
 
-jar‚ğƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆø”–³‚µ‚ÅÀs‚·‚é‚ÆA(‰ºè‚È‰pŒê‚Å)ƒwƒ‹ƒv‚ª•\¦‚³‚ê‚Ü‚·B
+jarã‚’ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°ç„¡ã—ã§å®Ÿè¡Œã™ã‚‹ã¨ã€(ä¸‹æ‰‹ãªè‹±èªã§)ãƒ˜ãƒ«ãƒ—ãŒè¡¨ç¤ºã•ã‚Œã¾ã™ã€‚
