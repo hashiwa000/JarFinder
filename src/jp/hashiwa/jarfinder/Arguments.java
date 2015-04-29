@@ -5,6 +5,7 @@ import jp.hashiwa.jarfinder.impl.ClassNameFilterProcessor;
 import jp.hashiwa.jarfinder.impl.ConstantPoolFilterProcessor;
 import jp.hashiwa.jarfinder.impl.ExtendsProcessor;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.stream.Stream;
 
@@ -88,6 +89,7 @@ class Arguments {
   }
   
   private void parseAllConstantPoolArgs(String[] args, PrintWriter out) {
+    if (2 < args.length) usage();
     this.proc = new ConstantPoolFilterProcessor(null, out, true);
   }
 
@@ -100,11 +102,12 @@ class Arguments {
   }
 
   private void parseExtendsArgs(String[] args, PrintWriter out) {
+    if (2 < args.length) usage();
     this.proc = new ExtendsProcessor(out, false);
   }
 
   private static String[] splitPaths(String path) {
-    final String separator = isWindows() ? ";" : ":";
+    final String separator = String.valueOf(File.pathSeparatorChar);
     String[] ret = Stream.of(path.split(separator))
             .filter(s -> !s.equals(""))
             .toArray(n -> new String[n]);
@@ -117,16 +120,16 @@ class Arguments {
   }
 
   private static void usage() {
-    System.out.println("jarfinder.bat <command> [options]");
+    System.out.println("Usage : jarfinder.bat <command> [options]");
     System.out.println();
     System.out.println("<command>");
     System.out.println("  class or class-all or constpool or constpool-all or");
-    System.out.println("  calltree");
+    System.out.println("  calltree or extends");
     System.out.println();
     System.out.println("<command>      : [options]");
     System.out.println("  class        : <dir> <target-class> [-v]");
     System.out.println("    Search classes in jar files.");
-    System.out.println("    <dir> is start directories for finding jar files, or");
+    System.out.println("    <dir> are start directories for finding jar files, or");
     System.out.println("    jar file paths");
     System.out.println("    <target-class> is regex expression of class name");
     System.out.println("    which you are looking for. If not specified, all");
@@ -135,11 +138,11 @@ class Arguments {
     System.out.println("    disabled.");
     System.out.println("  class-all    : <dir>");
     System.out.println("    Show all classes in jar files.");
-    System.out.println("    <dir> is start directories for finding jar files, or");
+    System.out.println("    <dir> are start directories for finding jar files, or");
     System.out.println("    jar file paths");
     System.out.println("  constpool    : <dir> <target-str> [-v]");
     System.out.println("    Search constant pool entries (UTF8 info) in jar files.");
-    System.out.println("    <dir> is start directories for finding jar files, or");
+    System.out.println("    <dir> are start directories for finding jar files, or");
     System.out.println("    jar file paths");
     System.out.println("    <target-str> is regex expression of constant pool");
     System.out.println("    entry (UTF8 info) which you are looking for.");
@@ -147,17 +150,24 @@ class Arguments {
     System.out.println("    disabled.");
     System.out.println("  constpool-all : <dir>");
     System.out.println("    Show all constant pool entry (UTF8 info).");
-    System.out.println("    <dir> is start directories for finding jar files, or");
+    System.out.println("    <dir> are start directories for finding jar files, or");
     System.out.println("    jar file paths");
     System.out.println("  calltree : <dir> <target-class>");
     System.out.println("    Show call tree.");
-    System.out.println("    <dir> is start directories for finding jar files, or");
+    System.out.println("    <dir> are start directories for finding jar files, or");
     System.out.println("    jar file paths");
     System.out.println("    <target-method> is target callee method. (e.g. ");
     System.out.println("    jp/hashiwa/tp/B.xxx:()V)");
+    System.out.println("    (under development...)");
+    System.out.println("  extends : <dir>");
+    System.out.println("    Show extends/implements relationships.");
+    System.out.println("    <dir> are start directories for finding jar files, or");
+    System.out.println("    jar file paths");
+    System.out.println("    NOTE: <dir> must contain rt.jar in JDK/JRE.");
     System.out.println();
     System.out.println("<dir> is ; or : separated string.");
-    System.out.println("  e.g. C:\\\\tmpdir;a.jar (Windows)");
+    System.out.println("(see API Reference of java.io.File#pathSeparatorChar)");
+    System.out.println("  e.g. C:\\tmpdir;a.jar  (Windows)");
     System.out.println("  e.g. /tmp/tmpdir:b.jar (Unix/Linux)");
     
     System.exit(-1);
