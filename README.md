@@ -1,4 +1,10 @@
-1. Usage: jarファイル群から特定の文字列(java/rmi)を含むクラスを探す  
+# JarFinder
+
+## Requirement  
+ * JDK/JRE 8 (動作確認はOracle JDKを使用)
+
+## Usage
++ jarファイル群から特定の文字列(java/rmi)を含むクラスを探す  
 
 <pre>
 >java -jar jarfinder.jar class "c:\Program Files (x86)\NetBeans 8.0.2\ide" Operation
@@ -11,7 +17,7 @@ org/antlr/runtime/TokenRewriteStream$RewriteOperation.class
   --- (snip) ---
 </pre>
 
-2. Usage: jarファイル群から特定の文字列(java/rmi)を含むコンスタントプールエントリーを探す  
++ jarファイル群から特定の文字列(java/rmi)を含むコンスタントプールエントリーを探す  
 
 <pre>
 >java -jar jarfinder.jar constpool "c:\Program Files (x86)\NetBeans 8.0.2\ide" java/rmi
@@ -30,8 +36,8 @@ java/rmi/RemoteException
   --- (snip) ---
 </pre>
 
-3. Usage: jarファイル群を解析して継承関係を表示する  
-    (注意：以下の例は、見やすいように関連するクラスを手動で除いています)
++ Usage: jarファイル群を解析して継承関係を表示する  
+  (注意：以下の例は、見やすいように関連するクラスを手動で除いています)
 
 <pre>
 >java -jar jarfinder.jar extends "c:\Program Files\Java\jdk1.8.0_45";jarfinder.jar
