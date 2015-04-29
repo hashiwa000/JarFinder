@@ -120,7 +120,7 @@ class Arguments {
   }
 
   private static void usage() {
-    System.out.println("Usage : jarfinder.bat <command> [options]");
+    System.out.println("Usage : java -jar jarfinder.jar <command> [options]");
     System.out.println();
     System.out.println("<command>");
     System.out.println("  class or class-all or constpool or constpool-all or");
