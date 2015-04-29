@@ -1,7 +1,7 @@
 1. Usage: jarファイル群から特定の文字列(java/rmi)を含むクラスを探す  
 
 <pre>
-java -jar jarfinder.jar class "c:\Program Files (x86)\NetBeans 8.0.2\ide" Operation
+>java -jar jarfinder.jar class "c:\Program Files (x86)\NetBeans 8.0.2\ide" Operation
 --- c:\Program Files (x86)\NetBeans 8.0.2\ide\modules\com-jcraft-jsch.jar ---
 --- c:\Program Files (x86)\NetBeans 8.0.2\ide\modules\com-jcraft-jzlib.jar ---
 --- c:\Program Files (x86)\NetBeans 8.0.2\ide\modules\docs\org-netbeans-modules-usersguide.jar ---
@@ -14,7 +14,7 @@ org/antlr/runtime/TokenRewriteStream$RewriteOperation.class
 2. Usage: jarファイル群から特定の文字列(java/rmi)を含むコンスタントプールエントリーを探す  
 
 <pre>
-java -jar jarfinder.jar constpool "c:\Program Files (x86)\NetBeans 8.0.2\ide" java/rmi
+>java -jar jarfinder.jar constpool "c:\Program Files (x86)\NetBeans 8.0.2\ide" java/rmi
 --- c:\Program Files (x86)\NetBeans 8.0.2\ide\modules\com-jcraft-jsch.jar ---
 ----- com/jcraft/jsch/Buffer.class -----
 ----- com/jcraft/jsch/Channel$1.class -----
@@ -34,7 +34,7 @@ java/rmi/RemoteException
     (注意：以下の例は、見やすいように関連するクラスを手動で除いています)
 
 <pre>
-java -jar jarfinder.jar extends "c:\Program Files\Java\jdk1.8.0_45";jarfinder.jar
+>java -jar jarfinder.jar extends "c:\Program Files\Java\jdk1.8.0_45";jarfinder.jar
 
 ---------- extends ----------
 java/lang/Object
