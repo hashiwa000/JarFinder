@@ -1,9 +1,6 @@
 package jp.hashiwa.jarfinder;
 
-import jp.hashiwa.jarfinder.impl.CallTreeProcessor;
-import jp.hashiwa.jarfinder.impl.ClassNameFilterProcessor;
-import jp.hashiwa.jarfinder.impl.ConstantPoolFilterProcessor;
-import jp.hashiwa.jarfinder.impl.ExtendsProcessor;
+import jp.hashiwa.jarfinder.impl.*;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -50,10 +47,12 @@ class Arguments {
     case "calltree":
       parseCallTreeArgs(args, out);
       break;
-      case "extends":
+    case "extends":
         parseExtendsArgs(args, out);
         break;
-
+    case "methods":
+        parseMethodsArgs(args, out);
+        break;
     default:
       usage();
     }
@@ -94,7 +93,7 @@ class Arguments {
   }
 
   private void parseCallTreeArgs(String[] args, PrintWriter out) {
-    if (3 < args.length) usage();
+    if (args.length != 3) usage();
 
     String methodDesc = args[2];
 
@@ -104,6 +103,11 @@ class Arguments {
   private void parseExtendsArgs(String[] args, PrintWriter out) {
     if (2 < args.length) usage();
     this.proc = new ExtendsProcessor(out, false);
+  }
+
+  private void parseMethodsArgs(String[] args, PrintWriter out) {
+    if (2 < args.length) usage();
+    this.proc = new MethodsProcessor(out, false);
   }
 
   private static String[] splitPaths(String path) {
@@ -124,7 +128,7 @@ class Arguments {
     System.out.println();
     System.out.println("<command>");
     System.out.println("  class or class-all or constpool or constpool-all or");
-    System.out.println("  calltree or extends");
+    System.out.println("  calltree or extends or methods");
     System.out.println();
     System.out.println("<command>      : [options]");
     System.out.println("  class        : <dir> <target-class> [-v]");
@@ -164,6 +168,10 @@ class Arguments {
     System.out.println("    <dir> are start directories for finding jar files, or");
     System.out.println("    jar file paths");
     System.out.println("    NOTE: <dir> must contain rt.jar in JDK/JRE.");
+    System.out.println("  methods : <dir>");
+    System.out.println("    Show all methods.");
+    System.out.println("    <dir> are start directories for finding jar files, or");
+    System.out.println("    jar file paths");
     System.out.println();
     System.out.println("<dir> is ; or : separated string.");
     System.out.println("(see API Reference of java.io.File#pathSeparatorChar)");

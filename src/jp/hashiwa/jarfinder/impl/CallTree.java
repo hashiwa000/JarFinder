@@ -1,157 +1,153 @@
 package jp.hashiwa.jarfinder.impl;
 
-import com.sun.istack.internal.NotNull;
-
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Hashiwa on 2015/04/18.
  */
 class CallTree {
-  // private Map<CallTreeEntry, Set<CallTreeEntry>> callee2caller = new HashMap<>();
-  private Set<CallTreeEntry> entries = new HashSet<>();
+  private CalleeClasses calleeClasses = new CalleeClasses();
 
-  public boolean add(String calleeClassName, String calleeMethodName, String calleeDesc,
+  public void add(String calleeClassName, String calleeMethodName, String calleeDesc,
            String callerClassName, String callerMethodName, String callerDesc) {
 
-    return add(
-            new CallTreeEntry(calleeClassName, calleeMethodName, calleeDesc),
-            new CallTreeEntry(callerClassName, callerMethodName, callerDesc));
+    Caller caller = new Caller(callerClassName, callerMethodName, callerDesc);
+    calleeClasses
+            .get(calleeClassName)
+            .get(calleeMethodName)
+            .get(calleeDesc)
+            .add(caller);
   }
 
-  public boolean add(CallTreeEntry callee, CallTreeEntry caller) {
-    CallTreeEntry calleeInEntries = null;
-    CallTreeEntry callerInEntries = null;
-    for (CallTreeEntry e: entries) {
-      if (calleeInEntries==null && e.equals(callee)) {
-        calleeInEntries = e;
-      } else if (callerInEntries==null && e.equals(caller)) {
-        callerInEntries = e;
+  public void printOn(PrintWriter out, String calleeClassName,
+                      String calleeMethodName, String calleeDesc)
+  {
+    printOn0(out, calleeClassName, calleeMethodName,
+            calleeDesc, 0, new HashSet<>());
+  }
+  private void printOn0(PrintWriter out, String calleeClassName,
+                        String calleeMethodName, String calleeDesc,
+                        int depth, Set<Caller> doneSet)
+  {
+    Set<Caller> callers = calleeClasses
+            .get(calleeClassName)
+            .get(calleeMethodName)
+            .get(calleeDesc);
+
+    printOneCaller(out, calleeClassName,
+            calleeMethodName, calleeDesc, depth);
+
+    for (Caller caller: callers) {
+
+      // reject loop
+      if (doneSet.contains(caller)) continue;
+      doneSet.add(caller);
+
+      int newDepth = depth + 1;
+      String callerClassName = caller.clazz;
+      String callerMethodName = caller.method;
+      String callerDesc = caller.desc;
+      printOn0(out, callerClassName, callerMethodName,
+              callerDesc, newDepth, doneSet);
+    }
+  }
+
+  private void printOneCaller(PrintWriter out, String calleeClassName,
+                              String calleeMethodName, String calleeDesc,
+                              int depth)
+  {
+    if (depth != 0) {
+      for (int i=0 ; i<depth ; i++) out.print('\t');
+      out.print("<-");
+    }
+    out.println(calleeClassName + "." + calleeMethodName + ":" + calleeDesc);
+  }
+
+  private static class CalleeClasses extends CalleeEntries<CalleeMethods> {
+    @Override
+    protected CalleeMethods newEntriesInstance() {
+      return new CalleeMethods();
+    }
+  }
+  private static class CalleeMethods extends CalleeEntries<CallerDescs> {
+    @Override
+    protected CallerDescs newEntriesInstance() {
+      return new CallerDescs();
+    }
+  }
+  private static class CallerDescs extends CalleeEntries<Set<Caller>> {
+    @Override
+    protected Set<Caller> newEntriesInstance() {
+      return new TreeSet<>();
+    }
+  }
+
+  private static abstract class CalleeEntries<T> {
+    private Map<String, T> map = new TreeMap<>();
+
+    T get(String label) {
+      T entries = map.get(label);
+      if (entries == null) {
+        entries = newEntriesInstance();
+        map.put(label, entries);
       }
-
-      if (calleeInEntries!=null && callerInEntries!=null) break;
+      return entries;
     }
-
-    if (calleeInEntries == null) {
-      calleeInEntries = callee;
-      entries.add(calleeInEntries);
-    }
-
-    if (callerInEntries == null) {
-      callerInEntries = caller;
-      entries.add(callerInEntries);
-    }
-
-    return calleeInEntries.addCaller(callerInEntries);
+    protected abstract T newEntriesInstance();
   }
 
-  public void printOn(PrintWriter out, String calleeClassName, String calleeMethodName, String calleeDesc) {
-    printOn(out, new CallTreeEntry(calleeClassName, calleeMethodName, calleeDesc));
-  }
-  public void printOn(PrintWriter out, CallTreeEntry callee) {
-    printOn(out, callee, 0, new HashSet<CallTreeEntry>());
-  }
-  private void printOn(PrintWriter out, CallTreeEntry callee, int indent, Set<CallTreeEntry> alreadyPrinted) {
-    CallTreeEntry root = null;
-    for (CallTreeEntry e: entries) {
-      if (e.equals(callee)) {
-        root = e;
-        break;
-      }
-    }
+  private static class Caller implements Comparable {
+    private String clazz;
+    private String method;
+    private String desc;
 
-    if (root == null) {
-      out.println();
-      return;
-    }
-
-    for (int i=0 ; i<indent ; i++) {
-      out.print('\t');
-    }
-    if (indent!=0) out.print("<-");
-
-    out.println(root);
-
-    int nextIndent = indent + 1;
-    for (CallTreeEntry e: root.getCallers()) {
-      if (!alreadyPrinted.contains(e)) {
-        alreadyPrinted.add(e);
-        printOn(out, e, nextIndent, alreadyPrinted);
-      }
-    }
-  }
-
-  static class CallTreeEntry {
-    private String calleeClassName;
-    private String calleeMethodName;
-    private String calleeDesc;
-    private Set<CallTreeEntry> callers;
-    private String printStrCache = null;
-
-    CallTreeEntry(@NotNull String calleeClassName, @NotNull String calleeMethodName, @NotNull String calleeDesc) {
-      this.calleeClassName = calleeClassName;
-      this.calleeMethodName = calleeMethodName;
-      this.calleeDesc = calleeDesc;
-      this.callers = new HashSet<>();
-    }
-
-    public String getClassName() {
-      return calleeClassName;
-    }
-
-    public String getMethodName() {
-      return calleeMethodName;
-    }
-
-    public String getDesc() {
-      return calleeDesc;
-    }
-
-    public boolean addCaller(CallTreeEntry caller) {
-      return callers.add(caller);
-    }
-
-    private Set<CallTreeEntry> getCallers() {
-      return callers;
+    Caller(String clazz, String method, String desc) {
+      this.clazz = clazz;
+      this.method = method;
+      this.desc = desc;
     }
 
     @Override
     public int hashCode() {
-      return calleeClassName.hashCode() +
-              calleeMethodName.hashCode() +
-              calleeDesc.hashCode();
-    }
-
-    public boolean equals(String className, String methodName, String desc) {
-      return this.calleeClassName.equals(className) &&
-              this.calleeMethodName.equals(methodName) &&
-              this.calleeDesc.equals(desc);
+      return clazz.hashCode() +
+              method.hashCode() +
+              desc.hashCode();
     }
 
     @Override
     public boolean equals(Object o) {
-      if (o == null) return false;
-      if (!(o instanceof CallTreeEntry)) return false;
-      CallTreeEntry e = (CallTreeEntry) o;
-      return equals(e.getClassName(), e.getMethodName(), e.getDesc());
+      if (!(o instanceof Caller)) return false;
+
+      Caller other = (Caller)o;
+      return clazz.equals(other.clazz) &&
+              method.equals(other.method) &&
+              desc.equals(other.desc);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+      if (!(o instanceof Caller)) return 0;
+
+      Caller other = (Caller)o;
+      int ret;
+
+      ret = clazz.compareTo(other.clazz);
+      if (ret != 0) return ret;
+
+      ret = method.compareTo(other.method);
+      if (ret != 0) return ret;
+
+      return desc.compareTo(other.desc);
     }
 
     @Override
     public String toString() {
-      if (printStrCache == null) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClassName());
-        sb.append('.');
-        sb.append(getMethodName());
-        sb.append(':');
-        sb.append(getDesc());
-        printStrCache = sb.toString();
-      }
-      return printStrCache;
+      StringBuilder sb = new StringBuilder();
+      sb.append(clazz).append('.')
+              .append(method).append(':')
+              .append(desc);
+      return sb.toString();
     }
   }
 }

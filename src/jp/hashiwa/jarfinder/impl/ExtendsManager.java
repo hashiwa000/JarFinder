@@ -43,6 +43,7 @@ class ExtendsManager {
   void printOn(@NotNull PrintWriter out) {
     out.println("---------- extends ----------");
     printExtendsOn(out, "java/lang/Object", 0);
+    out.println();
     out.println("-------- implements ---------");
     printImplementsOn(out);
   }
