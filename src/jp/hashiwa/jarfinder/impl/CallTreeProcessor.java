@@ -12,8 +12,9 @@ import java.util.zip.ZipFile;
  * Created by Hashiwa on 2015/04/17.
  */
 public class CallTreeProcessor extends JarFileProcessorImpl {
-  private final CallTree callTree = new CallTree();
-  private final ClassVisitor cv = new CallTreeClassVisitor(callTree);
+  private final ExtendsUpwardManager manager = new ExtendsUpwardManager();
+  private final CallTree callTree = new CallTree(manager);
+  private final ClassVisitor cv = new CallTreeClassVisitor(manager, callTree);
 
   // e.g. "jp/hashiwa/tp/B.xxx:()V";
   private final String methodDesc;

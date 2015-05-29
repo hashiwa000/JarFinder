@@ -12,7 +12,7 @@ import java.util.zip.ZipFile;
  * Created by Hashiwa on 2015/04/23.
  */
 public class ExtendsProcessor extends JarFileProcessorImpl {
-  private final ExtendsManager manager = new ExtendsManager();
+  private final ExtendsDownwardManager manager = new ExtendsDownwardManager();
   private final ClassVisitor cv = new ExtendsClassVisitor(manager);
 
   public ExtendsProcessor(PrintWriter out, boolean verbose) {

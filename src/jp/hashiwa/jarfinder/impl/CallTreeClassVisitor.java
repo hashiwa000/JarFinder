@@ -10,11 +10,12 @@ import java.util.Set;
 /**
  * Created by Hashiwa on 2015/04/17.
  */
-class CallTreeClassVisitor extends ClassVisitor {
+class CallTreeClassVisitor extends ExtendsClassVisitor {
   private final CallTree callTree;
+//  private final Map<String, Set<String>> class
 
-  CallTreeClassVisitor(CallTree callTree) {
-    super(Opcodes.ASM5);
+  CallTreeClassVisitor(ExtendsUpwardManager manager, CallTree callTree) {
+    super(manager);
     this.callTree = callTree;
   }
 

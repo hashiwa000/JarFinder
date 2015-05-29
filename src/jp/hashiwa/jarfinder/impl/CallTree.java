@@ -7,7 +7,12 @@ import java.util.*;
  * Created by Hashiwa on 2015/04/18.
  */
 class CallTree {
-  private CalleeClasses calleeClasses = new CalleeClasses();
+  private final CalleeClasses calleeClasses = new CalleeClasses();
+  private final ExtendsUpwardManager manager;
+
+  public CallTree(ExtendsUpwardManager manager) {
+    this.manager = manager;
+  }
 
   public void add(String calleeClassName, String calleeMethodName, String calleeDesc,
            String callerClassName, String callerMethodName, String callerDesc) {
@@ -23,45 +28,8 @@ class CallTree {
   public void printOn(PrintWriter out, String calleeClassName,
                       String calleeMethodName, String calleeDesc)
   {
-    printOn0(out, calleeClassName, calleeMethodName,
-            calleeDesc, 0, new HashSet<>());
-  }
-  private void printOn0(PrintWriter out, String calleeClassName,
-                        String calleeMethodName, String calleeDesc,
-                        int depth, Set<Caller> doneSet)
-  {
-    Set<Caller> callers = calleeClasses
-            .get(calleeClassName)
-            .get(calleeMethodName)
-            .get(calleeDesc);
-
-    printOneCaller(out, calleeClassName,
-            calleeMethodName, calleeDesc, depth);
-
-    for (Caller caller: callers) {
-
-      // reject loop
-      if (doneSet.contains(caller)) continue;
-      doneSet.add(caller);
-
-      int newDepth = depth + 1;
-      String callerClassName = caller.clazz;
-      String callerMethodName = caller.method;
-      String callerDesc = caller.desc;
-      printOn0(out, callerClassName, callerMethodName,
-              callerDesc, newDepth, doneSet);
-    }
-  }
-
-  private void printOneCaller(PrintWriter out, String calleeClassName,
-                              String calleeMethodName, String calleeDesc,
-                              int depth)
-  {
-    if (depth != 0) {
-      for (int i=0 ; i<depth ; i++) out.print('\t');
-      out.print("<-");
-    }
-    out.println(calleeClassName + "." + calleeMethodName + ":" + calleeDesc);
+    CallTreePrinter printer = new CallTreePrinter(out);
+    printer.print(calleeClassName, calleeMethodName, calleeDesc);
   }
 
   private static class CalleeClasses extends CalleeEntries<CalleeMethods> {
@@ -140,14 +108,80 @@ class CallTree {
 
       return desc.compareTo(other.desc);
     }
+  }
 
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder();
-      sb.append(clazz).append('.')
-              .append(method).append(':')
-              .append(desc);
-      return sb.toString();
+  private class CallTreePrinter {
+    private final PrintWriter out;
+    private final Set<Caller> doneSet = new HashSet<>();
+
+    CallTreePrinter(PrintWriter out) {
+      this.out = out;
+    }
+
+    public void print(String calleeClassName, String calleeMethodName,
+                        String calleeDesc)
+    {
+      print0(calleeClassName, calleeMethodName,
+              calleeDesc, 0);
+    }
+
+    private void print0(String calleeClassName, String calleeMethodName,
+               String calleeDesc, int depth)
+    {
+      // reject loop
+      if (isDone(calleeClassName, calleeMethodName, calleeDesc)) return;
+
+      Set<Caller> callers = calleeClasses
+              .get(calleeClassName)
+              .get(calleeMethodName)
+              .get(calleeDesc);
+
+      printOneCaller(out, calleeClassName,
+              calleeMethodName, calleeDesc, depth);
+
+      for (Caller caller: callers) {
+        int newDepth = depth + 1;
+        String callerClassName = caller.clazz;
+        String callerMethodName = caller.method;
+        String callerDesc = caller.desc;
+        print0(callerClassName, callerMethodName,
+                callerDesc, newDepth);
+      }
+
+      String superClassName = manager.getSuperClass(calleeClassName);
+      callers = calleeClasses
+              .get(superClassName)
+              .get(calleeMethodName)
+              .get(calleeDesc);
+
+      for (Caller caller: callers) {
+        int newDepth = depth + 1;
+        String callerClassName = caller.clazz;
+        String callerMethodName = caller.method;
+        String callerDesc = caller.desc;
+        print0(callerClassName, callerMethodName,
+                callerDesc, newDepth);
+      }
+    }
+
+    private void printOneCaller(PrintWriter out, String calleeClassName,
+                                String calleeMethodName, String calleeDesc,
+                                int depth)
+    {
+      if (depth != 0) {
+        for (int i=0 ; i<depth ; i++) out.print('\t');
+        out.print("<-");
+      }
+      out.println(calleeClassName + "." + calleeMethodName + ":" + calleeDesc);
+    }
+
+    private boolean isDone(String clazz, String method, String desc) {
+      Caller caller = new Caller(clazz, method, desc);
+
+      if (doneSet.contains(caller)) return true;
+
+      doneSet.add(caller);
+      return false;
     }
   }
 }
