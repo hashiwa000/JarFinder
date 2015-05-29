@@ -49,7 +49,7 @@ class ExtendsDownwardManager extends ExtendsManager {
               out.println(itf);
               classes.stream()
                       .filter(c -> c != null)
-                      .forEach(c -> out.println("\t<-" + c));
+                      .forEach(c -> out.println("\t<=" + c));
             }
     );
   }
