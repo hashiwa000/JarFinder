@@ -19,8 +19,11 @@ public class ExtendsClassVisitor extends ClassVisitor {
                     String superName, String[] interfaces) {
 
     super.visit(version, access, name, signature, superName, interfaces);
-    
-    manager.addSuperClass(name, superName);
+    boolean isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
+
+    if (!isInterface)
+      manager.addSuperClass(name, superName);
+
     manager.addInterfaces(name, interfaces);
   }
 }
