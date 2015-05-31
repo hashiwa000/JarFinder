@@ -15,38 +15,38 @@ public abstract class ExtendsManager {
   public abstract void addSuperClass(String subClass, String superClass);
   public abstract void addInterface(String cls, String itf);
 
-  public void addInterfaces(@NotNull String cls, @NotNull String[] interfaces) {
+  public final void addInterfaces(@NotNull String cls, @NotNull String[] interfaces) {
     if (interfaces == null) return;
     Stream.of(interfaces).forEach(
             i -> addInterface(cls, i)
     );
   }
 
-  void addExtendsValue(String key, String value) {
+  final void addExtendsValue(String key, String value) {
     add(key, value, extendsMap);
   }
 
-  void addImplementsValue(String key, String value) {
+  final void addImplementsValue(String key, String value) {
     add(key, value, implementsMap);
   }
 
-  Set<String> getExtendsValue(String key) {
+  final Set<String> getExtendsValue(String key) {
     return get(key, extendsMap);
   }
 
-  Set<String> getImplementsValue(String key) {
+  final Set<String> getImplementsValue(String key) {
     return get(key, implementsMap);
   }
 
-  Map<String, Set<String>> getExtendsMap() {
+  final Map<String, Set<String>> getExtendsMap() {
     return extendsMap;
   }
 
-  Map<String, Set<String>> getImplementsMap() {
+  final Map<String, Set<String>> getImplementsMap() {
     return implementsMap;
   }
 
-  private static void add(String key, String value, Map<String, Set<String>> map) {
+  private final static void add(String key, String value, Map<String, Set<String>> map) {
     Set<String> values = map.get(key);
     if (values == null) {
       values = new TreeSet<>();
@@ -54,7 +54,7 @@ public abstract class ExtendsManager {
     }
     values.add(value);
   }
-  private static Set<String> get(String key, Map<String, Set<String>> map) {
+  private final static Set<String> get(String key, Map<String, Set<String>> map) {
     Set<String> values = map.get(key);
     if (values == null) {
       values = new TreeSet<>();

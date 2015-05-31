@@ -29,7 +29,7 @@ public abstract class JarFileProcessorImpl implements JarFileProcessor {
     this.verbose = verbose;
   }
 
-  public void doOneJar(String jarPath) {
+  public final void doOneJar(String jarPath) {
     produceJarFileStr(jarPath);
 
     File file = new File(jarPath);
@@ -47,19 +47,19 @@ public abstract class JarFileProcessorImpl implements JarFileProcessor {
     }
   }
 
-  protected PrintWriter getOut() {
+  protected final PrintWriter getOut() {
     return out;
   }
 
-  protected void println(String str) {
+  protected final void println(String str) {
     out.println(str);
   }
   
-  protected boolean isVerbose() {
+  protected final boolean isVerbose() {
     return verbose;
   }
   
-  protected void produceJarFileStr(String jarPathStr) {
+  protected final void produceJarFileStr(String jarPathStr) {
 //    assert jarPathStr!=null;
     if (verbose) {
       printJarPath(jarPathStr);
@@ -68,14 +68,14 @@ public abstract class JarFileProcessorImpl implements JarFileProcessor {
     }
   }
   
-  protected void consumeJarFileStr() {
+  protected final void consumeJarFileStr() {
     if (cachedJarPath!=null && !verbose) {
       printJarPath(cachedJarPath);
       cachedJarPath = null;
     }
   }
   
-  private void printJarPath(String jarPath) {
+  private final void printJarPath(String jarPath) {
     println("--- " + jarPath + " ---");
   }
   
