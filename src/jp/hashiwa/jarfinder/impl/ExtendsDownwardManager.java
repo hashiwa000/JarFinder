@@ -44,6 +44,7 @@ class ExtendsDownwardManager extends ExtendsManager {
   }
 
   private void printImplementsOn(PrintWriter out) {
+    normalizeInterfaceMap();
     getImplementsMap().forEach(
             (itf, classes) -> {
               out.println(itf);
@@ -52,5 +53,31 @@ class ExtendsDownwardManager extends ExtendsManager {
                       .forEach(c -> out.println("\t<=" + c));
             }
     );
+  }
+
+  private void normalizeInterfaceMap() {
+    while (normalizeOne()) {}
+  }
+
+  private boolean normalizeOne() {
+    Map<String, Set<String>> map = getImplementsMap();
+    boolean changed = false;
+
+    for (String itf: map.keySet()) {
+      Set<String> addTo = map.get(itf);
+      Set<String> added = null;
+
+      for (String cls: addTo) {
+        added = map.get(cls);
+        if (added != null) {
+          addTo.remove(cls);
+          addTo.addAll(added);
+          changed = true;
+          break;
+        }
+      }
+    }
+
+    return changed;
   }
 }
