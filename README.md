@@ -80,8 +80,10 @@ java/lang/Object
  		<-jp/hashiwa/jarfinder/impl/ExtendsProcessor
  
 -------- implements ---------
+java/lang/Comparable
+	<=jp/hashiwa/jarfinder/impl/CallTree$Caller
 jp/hashiwa/jarfinder/JarFileProcessor
-	<-jp/hashiwa/jarfinder/impl/JarFileProcessorImpl
+	<=jp/hashiwa/jarfinder/impl/JarFileProcessorImpl
 </pre>
 
 jarをコマンドライン引数無しで実行すると、(下手な英語で)ヘルプが表示されます。
